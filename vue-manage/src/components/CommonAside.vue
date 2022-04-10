@@ -9,7 +9,7 @@
     @close="handleClose"
     :collapse="isCollapse"
   >
-    <h3>通用后台管理系统</h3>
+    <h3>{{ isCollapse?'后台':'通用后台管理系统' }}</h3>
     <el-menu-item
     @click="clickMenu(item)"
       v-for="item in noChildren"
@@ -42,10 +42,12 @@
   .el-menu-vertical-demo:not(.el-menu--collapse) {
     width: 200px;
     min-height: 400px;
+    overflow: hidden;
   }
   .el-menu {
     height: 100%;
     border: none;
+
     h3 {
       color: #fff;
       text-align: center;
@@ -58,7 +60,6 @@
 export default {
   data() {
     return {
-      isCollapse: false,
       menu: [
         {
           path: "/",
@@ -111,6 +112,9 @@ export default {
     hasChildren() {
       return this.menu.filter((item) => item.children);
     },
+    isCollapse() {
+      return this.$store.state.tab.isCollapse
+    }
   },
   methods: {
     handleOpen(key, keyPath) {

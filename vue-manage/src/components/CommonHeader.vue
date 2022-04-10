@@ -2,7 +2,7 @@
   <header>
     <div class="head-container">
       <div class="left-box">
-        <el-button plain icon="el-icon-menu" size="mini"></el-button>
+        <el-button @click="handleMenu" plain icon="el-icon-menu" size="mini"></el-button>
         <h3 style="padding-left:14px; color: #fff">首页</h3>
       </div>
       <div class="r-content">
@@ -25,9 +25,14 @@ export default {
   name: "CommonHeader",
   data() {
     return {
-      userImg: require("../assets/logo.png"),
-    };
+      userImg: require("../assets/logo.png")
+    }
   },
+  methods: {
+      handleMenu() {
+        this.$store.commit('collapseMenu')
+      }
+  }
 };
 </script>
 
