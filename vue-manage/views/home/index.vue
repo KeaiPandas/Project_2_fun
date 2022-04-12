@@ -24,10 +24,13 @@
           :prop="key"
           :label="val"
         >
-          
+
         </el-table-column>
         </el-table>
       </el-card>
+    </el-col>
+    <el-col :span="16">
+
     </el-col>
   </el-row>
 </template>
