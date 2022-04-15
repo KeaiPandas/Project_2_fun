@@ -140,7 +140,7 @@ export default {
     }
   },
   mounted() {
-    
+    {}
   }
 }
 </script>
