@@ -31,7 +31,7 @@
     </el-col>
     <el-col :span="16">
       <div class="num">
-        <el-card v-for="item in countData" :key="item.name" :body-style="{display: flex, padding: 0}">
+        <el-card v-for="item in countData" :key="item.name" :body-style="{display: 'flex', padding: 0}">
           <i class="icon" :class="`el-icon-${item.icon}`" :style="{ background: item.color }"></i>
           <div class="detail">
             <p class="num">${{ item.value }}</p>
@@ -49,6 +49,7 @@
 </template>
 
 <script>
+import { getMenu } from '../../api/data'
 export default {
   // eslint-disable-next-line vue/multi-word-component-names
   name: 'home',
@@ -140,13 +141,12 @@ export default {
     }
   },
   mounted() {
-    {}
+    getMenu().then(res => {
+      console.log(res)
+    })
   }
 }
 </script>
 
 <style lang="less" scoped>
-  .user-img {
-    
-  }
 </style>
