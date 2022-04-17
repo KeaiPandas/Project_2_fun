@@ -39,10 +39,16 @@
           </div>
         </el-card>
       </div>
-      <el-card style="height: 200px"></el-card>
+      <el-card style="height: 280px">
+        <div style="height: 280px" ref="echarts"></div>
+      </el-card>
       <div class="graph">
-        <el-card style="height: 260px"></el-card>
-        <el-card style="height: 260px"></el-card>
+        <el-card style="height: 260px">
+          <div style="height: 240px" ref="userEcharts"></div>
+        </el-card>
+        <el-card style="height: 260px">
+          <div style="height: 240px" ref="videoEcharts"></div>
+        </el-card>
       </div>
     </el-col>
   </el-row>
@@ -50,6 +56,8 @@
 
 <script>
 import { getData } from '../../api/data'
+import * as echarts from 'echarts'
+
 export default {
   // eslint-disable-next-line vue/multi-word-component-names
   name: 'home',
@@ -108,6 +116,110 @@ export default {
       const { code, data } = res.data
       if (code === 20000) {
         this.tableData = data.tableData
+        const order = data.orderData
+        const xData = order.date
+        const keyArray = Object.keys(order.data[0])
+        const series = []
+        keyArray.forEach(key => {
+          series.push({
+            name: key,
+            data: order.data.map(item => item[key]),
+            type: 'line'
+          })
+        })
+
+        const option = {
+          xAxis: {
+            data: xData
+          },
+          yAxis: {},
+          legend: {
+            data: keyArray
+          },
+          series
+        }
+
+        const E = echarts.init(this.$refs.echarts)
+        E.setOption(option)
+
+        // 用户图
+        const userOption = {
+          legend: {
+            textStyle: {
+              color: '#333'
+            }
+          },
+          grid: {
+            left: '20%'
+          },
+          tooltip: {
+            trigger: 'axis'
+          },
+          xAxis: {
+            type: "category",
+            data: data.userData.map(item => item.date),
+            axisLine: {
+              lineStyle: {
+                color: '#17b3a3'
+              }
+            },
+            axisLabel: {
+              interval: 0,
+              color: '#333'
+            }
+          },
+          yAxis: [
+            {
+              type: "value",
+              axisLine: {
+                lineStyle: {
+                  color: "#17b3a3"
+                }
+              }
+            }
+          ],
+          color: ['#2ec7c9', '#b6a2de'],
+          series: [
+            {
+              name: '新增用户',
+              data: data.userData.map(item => item.new),
+              type: 'bar'
+            },
+            {
+              name: '活跃用户',
+              data: data.userData.map(item => item.active),
+              type: 'bar'
+            },
+          ]
+        }
+
+        const U = echarts.init(this.$refs.userEcharts)
+        U.setOption(userOption)
+
+        // 饼图
+        const videoOption = {
+          tooltip: {
+            trigger: "item",
+          },
+          color: [
+            "#0f78f4",
+            "#dd536b",
+            "#9462e5",
+            "#a6a6a6",
+            "#e1bb22",
+            "#39c362",
+            "#3ed1cf"
+          ],
+          series: [
+            {
+              data: data.videoData,
+              type: 'pie'
+            }
+          ]
+        }
+
+        const V = echarts.init(this.$refs.videoEcharts)
+        V.setOption(videoOption)
       }
     })
   }
