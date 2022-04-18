@@ -19,6 +19,21 @@ const routes = [
         path: '/user',
         name: 'user',
         component: () => import ('../views/user')
+      },
+      {
+        path: '/mail',
+        name: 'mail',
+        component: () => import('../views/mail')
+      },
+      {
+        path: '/page1',
+        name: 'page1',
+        component: () => import('../views/other/page1.vue')
+      },
+      {
+        path: '/page2',
+        name: 'page2',
+        component: () => import('../views/other/page2.vue')
       }
     ]
   }
