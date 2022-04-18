@@ -19,7 +19,7 @@ export default {
       if (value.name !== 'home'){
         state.currentMenu = value
         const result = state.tabList.findIndex(item => item.name === value.name)
-        if(result !== -1) {
+        if(result === -1) {
           state.tabList.push(value)
         }
       } else {
