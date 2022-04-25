@@ -1,4 +1,4 @@
 export default{
-  // sss
   test: 'test',
+  ll: 'ss'
 }
