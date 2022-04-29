@@ -1,4 +1,4 @@
 export default{
   test: 'test',
-  ll: 'ss'
+  ll: 'sss'
 }
