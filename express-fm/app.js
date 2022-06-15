@@ -1,17 +1,12 @@
 const express = require('express')
-const fs = require('fs')
-const { promisify } = require('util')
-const readFile = promisify(fs.readFile)
-const writeFile = promisify(fs.writeFile)
-
+const db = require('./db')
 const app = express()
 // app.use(express.urlencoded())
 app.use(express.json())
 app.get('/', async (req, res) => {
   try {
-    let back = await readFile('./db.json', 'utf8')
-    const jsonObj = JSON.parse(back)
-    res.send(jsonObj.users)
+    let back = await db.getDb()
+    res.send(back.users)
   } catch (err) {
     res.status(500).json({ err })
   }
@@ -27,16 +22,15 @@ app.post('/', async (req, res) => {
       error: '缺少用户信息'
     })
   }
-  let back = await readFile('./db.json', 'utf8')
-  const jsonObj = JSON.parse(back)
+  let jsonObj = await db.getDb()
   body.id = jsonObj.users[jsonObj.users.length - 1].id + 1
 
   jsonObj.users.push(body)
   try {
-    let w = await writeFile('./db.json', JSON.stringify(jsonObj))
+    let w = await db.serveDb(jsonObj)
     if (!w) {
       res.status(200).send({
-        msg:'添加成功'
+        msg: '添加成功'
       })
     }
   } catch (err) {
@@ -46,6 +40,34 @@ app.post('/', async (req, res) => {
   }
 
   // res.send(jsonObj.users)
+})
+
+app.put('/:id', async (req, res) => {
+  try {
+    let userInfo = await db.getDb()
+    let userId = parseInt(req.params.id)
+    let user = userInfo.users.find(item => item.id === userId)
+    if (!user) {
+      res.status(403).json({
+        error: '用户不存在'
+      })
+    }
+    // res.send(user)
+    const body = req.body
+    user.username = body.username ? body.username : user.username
+    user.age = body.age ? body.age: user.age
+    userInfo.users[userId-1] = user
+    if (!await db.serveDb(userInfo)) {
+      res.status(201).json({
+        msg: '修改成功'
+      })
+    }
+
+  } catch {
+    res.status(500).json({
+      error
+    })
+  }
 })
 
 app.listen(3000, () => {
